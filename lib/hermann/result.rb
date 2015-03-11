@@ -1,4 +1,3 @@
-
 module Hermann
   class Result
     attr_reader :reason, :state

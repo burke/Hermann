@@ -1,4 +1,3 @@
-hermann.iml
 .ruby-*
 *.so
 *.o
@@ -7,9 +6,7 @@ ext/mkmf.log
 ext/Makefile
 pkg/
 tmp/
-*.jar
 .ruby-gemset
 .ruby-version
 Gemfile.lock
-Jarfile.lock
-.jbundler/
+*.bundle

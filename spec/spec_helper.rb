@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'yaml'
 require 'rspec'
+require File.expand_path('../integrationconf', __FILE__)
 
 # Add ext/ to the load path so we can load `hermann_lib`
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../ext/'))
@@ -15,7 +16,6 @@ RSpec.configure do |c|
   shared_context 'integration test context', :type => :integration do
     let(:topic) { $integrationconf['kafka']['topic'] }
     let(:brokers) { $integrationconf['kafka']['brokers'] }
-    let(:zookeepers) { $integrationconf['zookeepers'] }
   end
 end
 

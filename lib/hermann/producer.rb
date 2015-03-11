@@ -2,12 +2,7 @@ require 'thread_safe'
 
 require 'hermann'
 require 'hermann/result'
-
-if RUBY_PLATFORM == "java"
-  require 'hermann/provider/java_producer'
-else
-  require 'hermann_lib'
-end
+require 'hermann_lib'
 
 module Hermann
   class Producer
@@ -20,11 +15,7 @@ module Hermann
     def initialize(topic, brokers, opts={})
       @topic = topic
       @brokers = ThreadSafe::Array.new(brokers)
-      if Hermann.jruby?
-        @internal = Hermann::Provider::JavaProducer.new(brokers.join(','), opts)
-      else
-        @internal = Hermann::Lib::Producer.new(brokers.join(','))
-      end
+      @internal = Hermann::Lib::Producer.new(brokers.join(','))
       # We're tracking children so we can make sure that at Producer exit we
       # make a reasonable attempt to clean up outstanding result objects
       @children = ThreadSafe::Array.new
@@ -61,21 +52,11 @@ module Hermann
         return value.map { |e| self.push(e, opts) }
       end
 
-      if Hermann.jruby?
-        result = @internal.push_single(value, topic, nil)
-        unless result.nil?
-          @children << result
-        end
-        # Reaping children on the push just to make sure that it does get
-        # called correctly and we don't leak memory
-        reap_children
-      else
-        # Ticking reactor to make sure that we don't inadvertantly let the
-        # librdkafka callback queue overflow
-        tick_reactor
-        result = create_result
-        @internal.push_single(value, topic, result)
-      end
+      # Ticking reactor to make sure that we don't inadvertantly let the
+      # librdkafka callback queue overflow
+      tick_reactor
+      result = create_result
+      @internal.push_single(value, topic, result)
 
       return result
     end

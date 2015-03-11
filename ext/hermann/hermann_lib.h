@@ -58,16 +58,6 @@ static VALUE hermann_module;
 
 #define HERMANN_MAX_ERRSTR_LEN 512
 
-static int DEBUG = 0;
-
-// Should we expect rb_thread_blocking_region to be present?
-// #define RB_THREAD_BLOCKING_REGION
-#undef RB_THREAD_BLOCKING_REGION
-
-static 	enum {
-	OUTPUT_HEXDUMP,
-	OUTPUT_RAW,
-} output = OUTPUT_HEXDUMP;
 
 typedef struct HermannInstanceConfig {
 	char *topic;
@@ -80,13 +70,11 @@ typedef struct HermannInstanceConfig {
 	rd_kafka_topic_conf_t *topic_conf;
 	char errstr[512];
 	rd_kafka_conf_t *conf;
-	const char *debug;
 	int64_t start_offset;
 	int do_conf_dump;
 
 	int run;
 	int exit_eof;
-	int quiet;
 
 	int isInitialized;
 	int isConnected;

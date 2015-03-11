@@ -5,8 +5,6 @@ describe 'Hermann::Lib::Producer', :platform => :mri do
     require 'hermann_lib'
   end
 
-  let(:topic) { 'rspec' }
-  let(:brokers) { 'localhost:1337' }
   subject(:producer) { Hermann::Lib::Producer.new(brokers) }
   let(:timeout) { 3000 }
 
@@ -44,7 +42,7 @@ describe 'Hermann::Lib::Producer', :platform => :mri do
         producer.push_single(example.full_description, 'test-topic', nil)
         begin
           producer.tick(timeout)
-        rescue StandardError => ex
+        rescue StandardError
           # swallow exceptions, since we're just testing #errored?
         end
         expect(producer).to be_errored
